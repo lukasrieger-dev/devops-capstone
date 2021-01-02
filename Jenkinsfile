@@ -1,14 +1,32 @@
 pipeline {
+  agent any
     
-    agent any
-
-    stages {
-
-        stage("build") {
-
-            steps{
-                echo "Hello, Jenkins! You are great!"
-            }
-        }
+  stages {
+        
+    stage('Cloning Git Repo') {
+      steps {
+        git 'https://github.com/lukasrieger-dev/devops-capstone.git'
+      }
     }
+    stage('Install dependencies') {
+      steps {
+        echo '######################'              
+        echo 'Building...'       
+        echo '######################'                      
+      }
+    }
+     
+    stage('Running Tests') {
+      steps {
+        echo '######################'              
+        echo 'Running tests ...'          
+        echo '######################'               
+      }
+    }      
+  }
+  post { 
+      always { 
+          echo 'Done.'
+      }
+  }  
 }
