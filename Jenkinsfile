@@ -11,7 +11,7 @@ pipeline {
     stage('Install dependencies') {
       steps {
         echo '######################'              
-        echo 'Building...'       
+        echo 'Building...master'       
         echo '######################'                      
       }
     }
@@ -19,7 +19,7 @@ pipeline {
     stage('Running Tests') {
       steps {
         echo '######################'              
-        echo 'Running tests ...'          
+        echo 'Running tests ...master'          
         echo '######################'               
       }
     }      
