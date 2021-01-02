@@ -11,7 +11,7 @@ pipeline {
     stage('Install dependencies') {
       steps {
         echo '######################'              
-        echo 'Building...master'       
+        echo 'Building...test'       
         echo '######################'                      
       }
     }
