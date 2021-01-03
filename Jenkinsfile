@@ -31,15 +31,17 @@ pipeline {
         }
       }
     }
+
+    stage('verify aws-cli v2, eksctl, kubectl') {
+      steps {
+        sh 'aws --version'
+        sh 'eksctl version'
+        sh 'kubectl version --short --client'
+      }
+    }
+
   }
 
-  stage('verify aws-cli v2, eksctl, kubectl') {
-    steps {
-      sh 'aws --version'
-      sh 'eksctl version'
-      sh 'kubectl version --short --client'
-    }
-  }
 
   post { 
     always { 
