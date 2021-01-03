@@ -28,21 +28,18 @@ pipeline {
 
     stage('Install dependencies') {
       steps {
-        dir('api') {
-          sh 'make setup'
-          sh 'make install'
-        }                       
+        sh 'make setup'
+        sh 'make install'                     
       }
     }
      
     stage('Run tests') {
       steps {
-        dir('test') {
-          make test
-        }            
+        sh 'make test'         
       }
     }      
   }
+  
   post { 
       always { 
           echo 'Done.'
