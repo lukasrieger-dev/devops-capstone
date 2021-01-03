@@ -65,15 +65,15 @@ pipeline {
     }
 
     stage('Push to dockerhub') {
-        steps {
-            // As documented: https://devops4solutions.com/publish-docker-image-to-dockerhub-using-jenkins-pipeline/
-            withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
-                sh 'docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_USER}/${DOCKER_IMAGE_NAME}'
-                sh 'docker push ${DOCKER_USER}/${DOCKER_IMAGE_NAME}'
-            }
-            sh 'docker rmi -f $(docker images -q)'
-            sh 'docker image ls'
+      steps {
+        // As documented: https://devops4solutions.com/publish-docker-image-to-dockerhub-using-jenkins-pipeline/
+        withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
+          sh 'docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_USER}/${DOCKER_IMAGE_NAME}'
+          sh 'docker push ${DOCKER_USER}/${DOCKER_IMAGE_NAME}'
         }
+        sh 'docker rmi -f $(docker images -q)'
+        sh 'docker image ls'
+      }
     }
 
     stage('Deploy to EKS') {
@@ -139,7 +139,7 @@ pipeline {
       }
     }
   }
-  
+
   post { 
     always { 
         echo 'Done.'
