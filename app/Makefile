@@ -7,7 +7,7 @@ install:
 	pip3 install -r requirements.txt
 
 tests:
-	python3 -m pytest -vv test_*.py
+	python3 -m pytest -vv test/test_*.py
 
 lint:
 	hadolint Dockerfile

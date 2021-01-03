@@ -20,12 +20,12 @@ pipeline {
 
     stage('lint') {
       steps {
-        dir("api"){
+        dir("app"){
             sh """
-            python3 -m venv devops
-            . devops/bin/activate
+            python3 -m venv capstone
+            . capstone/bin/activate
             make install
-            make test
+            make tests
             make lint
             """
         }
