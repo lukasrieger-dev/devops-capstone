@@ -18,7 +18,7 @@ pipeline {
       }
     }
 
-    stage('Install dependencies') {
+    stage('Install dependencies, test, lint') {
       steps {
         dir("app"){
             sh """
@@ -26,27 +26,11 @@ pipeline {
             . capstone/bin/activate
             make install
             """
+            sh 'make tests'
+            sh 'make lint'
         }
       }
     }
-
-    stage('Run tests') {
-      steps {
-        dir('app'){
-          sh 'make tests'
-        }
-      }
-    }
-
-    stage('Lint') {
-      steps {
-        dir('app') {
-          sh 'make lint'
-        }
-      }
-    }
-
-
   }
 
   post { 
