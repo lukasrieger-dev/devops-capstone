@@ -39,7 +39,7 @@ pipeline {
         sh 'aws --version'
         sh 'eksctl version'
         sh 'kubectl version --short --client'
-        sh 'sudo docker version'
+        sh 'docker version'
       }
     }
 
