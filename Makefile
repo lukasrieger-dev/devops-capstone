@@ -6,7 +6,7 @@ install:
 	pip3 install --upgrade pip
 	pip3 install -r requirements.txt
 
-test:
+tests:
 	python3 -m pytest -vv test/test_*.py
 
 lint:

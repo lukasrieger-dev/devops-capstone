@@ -27,7 +27,7 @@ pipeline {
      
     stage('Run tests') {
       steps {
-        sh 'pytest -vv test/test_*.py'      
+        sh 'make tests'      
       }
     }
 
