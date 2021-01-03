@@ -12,7 +12,6 @@ def add():
     try:
         a = float(request.args.get('a'))
         b = float(request.args.get('b'))
-        x
     except ValueError:
         return "<h3>Invalid input</h3>"
 
