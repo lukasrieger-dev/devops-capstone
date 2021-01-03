@@ -14,6 +14,7 @@ pipeline {
             sh 'ls -la'
             sh 'python3 --version'
             sh 'pip3 --version'
+            sh 'which python3'
         }
     }
 
