@@ -2,7 +2,7 @@ pipeline {
   agent any
   
   environment {
-    AWS_REGION = 'us-east-2'
+    AWS_REGION = 'eu-central-1'
     EKS_CLUSTER_NAME = 'udacity-cloud-devops-capstone'
     DOCKER_IMAGE_NAME = 'udacity-cloud-devops-capstone'
   }
@@ -12,7 +12,6 @@ pipeline {
         steps {
             sh 'pwd'
             sh 'ls -la'
-            echo 'python environment'
             sh 'python3 --version'
             sh 'pip3 --version'
             withEnv(["HOME=${env.WORKSPACE}"]) {
@@ -26,19 +25,21 @@ pipeline {
         git 'https://github.com/lukasrieger-dev/devops-capstone.git'
       }
     }
+
     stage('Install dependencies') {
       steps {
-        echo '######################'              
-        echo 'Building...test'       
-        echo '######################'                      
+        dir('api') {
+          sh 'make setup'
+          sh 'make install'
+        }                       
       }
     }
      
-    stage('Running Tests') {
+    stage('Run tests') {
       steps {
-        echo '######################'              
-        echo 'Running tests ...master'          
-        echo '######################'               
+        dir('test') {
+          make test
+        }            
       }
     }      
   }
