@@ -76,7 +76,7 @@ pipeline {
         }
     }
 
-  stage('Deploy to AWS EKS') {
+  stage('Deploy to EKS') {
     steps {
       withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
         script {
@@ -120,22 +120,22 @@ pipeline {
   stage('Smoke test') {
     steps {
       withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
-          script {
-              def EKS_HOSTNAME = sh(
-                  script: 'kubectl get svc mathsapi -o jsonpath="{.status.loadBalancer.ingress[*].hostname}"',
-                  returnStdout: true
-                  ).trim()
-              sh "curl ${EKS_HOSTNAME}:8080"
-          }
+        script {
+            def EKS_HOSTNAME = sh(
+                script: 'kubectl get svc mathsapi -o jsonpath="{.status.loadBalancer.ingress[*].hostname}"',
+                returnStdout: true
+                ).trim()
+            sh "curl ${EKS_HOSTNAME}:8080"
+        }
       }
     }
   }
 
   stage('Check rollout') {
     steps {
-        withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
-            sh 'kubectl rollout status deployments/mathsapi'
-        }
+      withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
+          sh 'kubectl rollout status deployments/mathsapi'
+      }
     }
   }
 
