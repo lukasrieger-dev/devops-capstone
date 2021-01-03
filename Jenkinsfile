@@ -20,7 +20,6 @@ pipeline {
 
     stage('Install dependencies') {
       steps {
-        sh 'make setup'
         sh 'make install'             
       }
     }
