@@ -33,11 +33,12 @@ pipeline {
       }
     }
 
-    stage('Check awscli, eksctl, kubectl') {
+    stage('Check awscli, eksctl, kubectl, docker') {
       steps {
         sh 'aws --version'
         sh 'eksctl version'
         sh 'kubectl version --short --client'
+        sh 'docker version'
       }
     }
 
