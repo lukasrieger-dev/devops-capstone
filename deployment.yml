@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mathsapi
+
+spec:
+  selector:
+    app: mathsapi
+  ports:
+    - port: 8080
+      targetPort: 80
+  type: LoadBalancer
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mathsapi
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mathsapi
+  template:
+    metadata:
+      labels:
+        app: mathsapi
+    spec:
+      containers:
+        - name: mathsapi
+          image: lukasrieger/udacity-capstone-math-api
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "500m"
