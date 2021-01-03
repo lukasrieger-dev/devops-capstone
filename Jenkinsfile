@@ -2,11 +2,11 @@ pipeline {
   agent any
     
   stages {
-    stage('verify the build system') {
+    stage('System Check') {
         steps {
             sh 'pwd'
             sh 'ls -la'
-            echo 'verify python environment'
+            echo 'python environment'
             sh 'python3 --version'
             sh 'pip3 --version'
             withEnv(["HOME=${env.WORKSPACE}"]) {
