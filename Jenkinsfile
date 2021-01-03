@@ -29,7 +29,10 @@ pipeline {
     stage('Install dependencies') {
       steps {
         sh 'make setup'
-        sh 'make install'                  
+        sh 'make install'
+        sh 'pip3 list'
+        sh 'make test'
+        sh 'make lint'              
       }
     }
      
