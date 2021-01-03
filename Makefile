@@ -3,8 +3,8 @@ setup:
 	. capstone-env/bin/activate
 
 install:
-	pip install --upgrade pip &&\
-		pip install -r requirements.txt
+	#pip install --upgrade pip &&
+	pip3 install -r requirements.txt
 
 test:
 	python -m pytest -vv test/test_*.py
