@@ -55,10 +55,10 @@ pipeline {
         steps {
             sh 'docker image ls'
             sh 'docker container ls'
-            sh 'docker run -d -p 8080:80 ${DOCKER_IMAGE_NAME}'
+            sh 'docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
             // wait 2 seconds for the container to be ready, before we call it
             sh 'sleep 2s'
-            sh 'curl http://localhost:8080'
+            sh 'curl http://localhost:8000'
             sh 'docker stop $(docker ps -a -q)'
             sh 'docker rm -f $(docker ps -a -q)'
             sh 'docker container ls'
