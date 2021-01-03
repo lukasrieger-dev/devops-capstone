@@ -38,21 +38,21 @@ pipeline {
         sh 'aws --version'
         sh 'eksctl version'
         sh 'kubectl version --short --client'
-        sh 'docker version'
+        sh 'sudo docker version'
       }
     }
 
     stage('Build docker image') {
       steps {
         dir('app') {
-          sh 'docker build --tag=${DOCKER_IMAGE_NAME} .'
+          sh 'sudo docker build --tag=${DOCKER_IMAGE_NAME} .'
         }
       }
     }
 
     stage('Test docker container') {
         steps {
-            sh 'docker image ls'
+            sh 'sudo docker image ls'
             sh 'docker container ls'
             sh 'docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
             sh 'sleep 2s'
