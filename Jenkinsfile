@@ -14,31 +14,20 @@ pipeline {
             sh 'ls -la'
             sh 'python3 --version'
             sh 'pip3 --version'
-            withEnv(["HOME=${env.WORKSPACE}"]) {
-                sh 'printenv'
-            }
         }
-    }
-
-    stage('Clone Git Repo') {
-      steps {
-        git 'https://github.com/lukasrieger-dev/devops-capstone.git'
-      }
     }
 
     stage('Install dependencies') {
       steps {
         sh 'make setup'
         sh 'make install'
-        sh 'pip3 list'
-        sh 'make test'
-        sh 'make lint'              
+        sh 'pip3 list'             
       }
     }
      
     stage('Run tests') {
       steps {
-        sh 'make test'      
+        sh 'pytest -vv test/test_*.py'      
       }
     }
 
