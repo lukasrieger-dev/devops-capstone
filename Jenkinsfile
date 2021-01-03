@@ -123,7 +123,8 @@ pipeline {
                   script: 'kubectl get svc mathsapi -o jsonpath="{.status.loadBalancer.ingress[*].hostname}"',
                   returnStdout: true
                   ).trim()
-              sh 'curl ${EKS_HOSTNAME}:8080'
+              sh "echo ${EKS_HOSTNAME}"
+              sh "curl ${EKS_HOSTNAME}:8080"
           }
         }
       }
