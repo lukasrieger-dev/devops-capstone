@@ -25,9 +25,9 @@ pipeline {
             python3 -m venv capstone
             . capstone/bin/activate
             make install
+            make tests
+            make lint
             """
-            sh 'make tests'
-            sh 'make lint'
         }
       }
     }
