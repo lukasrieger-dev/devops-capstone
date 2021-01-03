@@ -9,38 +9,32 @@ pipeline {
 
   stages {
     stage('Check system') {
-        steps {
-            sh 'pwd'
-            sh 'ls -la'
-            sh 'python3 --version'
-            sh 'pip3 --version'
-            sh 'which python3'
+      steps {
+          sh 'pwd'
+          sh 'ls -la'
+          sh 'python3 --version'
+          sh 'pip3 --version'
+          sh 'which python3'
+      }
+    }
+
+    stage('lint') {
+      steps {
+        dir("api"){
+            sh """
+            python3 -m venv devops
+            . devops/bin/activate
+            make install
+            make lint
+            """
         }
-    }
-
-    stage('Install dependencies') {
-      steps {
-        sh 'make setup'
-        sh 'make install'             
       }
-    }
-     
-    stage('Run tests') {
-      steps {
-        sh 'make tests'      
-      }
-    }
-
-    stage('Run lint') {
-      steps {
-        sh 'make lint'               
-      }
-    }  
+    } 
   }
 
   post { 
-      always { 
-          echo 'Done.'
-      }
+    always { 
+        echo 'Done.'
+    }
   }  
 }
