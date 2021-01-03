@@ -4,7 +4,8 @@ pipeline {
   environment {
     AWS_REGION = 'eu-central-1'
     EKS_CLUSTER_NAME = 'nnnnn'
-    DOCKER_IMAGE_NAME = 'nnn'
+    DOCKER_IMAGE_NAME = 'udacity-capstone-math-api'
+    DOCKER_USER = 'lukasriegerdev'
   }
 
   stages {
@@ -32,12 +33,46 @@ pipeline {
       }
     }
 
-    stage('verify aws-cli v2, eksctl, kubectl') {
+    stage('Check awscli, eksctl, kubectl, docker') {
       steps {
         sh 'aws --version'
         sh 'eksctl version'
         sh 'kubectl version --short --client'
+        sh 'docker version'
       }
+    }
+
+    stage('Build docker image') {
+      steps {
+        dir('app') {
+          sh 'docker build --tag=${DOCKER_IMAGE_NAME} .'
+        }
+      }
+    }
+
+    stage('Test docker container') {
+        steps {
+            sh 'docker image ls'
+            sh 'docker container ls'
+            sh 'docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
+            sh 'sleep 2s'
+            sh 'curl http://localhost:8000'
+            sh 'docker stop $(docker ps -a -q)'
+            sh 'docker rm -f $(docker ps -a -q)'
+            sh 'docker container ls'
+        }
+    }
+
+    stage('Push to dockerhub') {
+        steps {
+            // As documented: https://devops4solutions.com/publish-docker-image-to-dockerhub-using-jenkins-pipeline/
+            withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
+                sh 'docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_USER}/${DOCKER_IMAGE_NAME}'
+                sh 'docker push ${DOCKER_USER}/${DOCKER_IMAGE_NAME}'
+            }
+            sh 'docker rmi -f $(docker images -q)'
+            sh 'docker image ls'
+        }
     }
 
   }
