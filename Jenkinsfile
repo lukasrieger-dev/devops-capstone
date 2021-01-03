@@ -1,6 +1,12 @@
 pipeline {
   agent any
-    
+  
+  environment {
+    AWS_REGION = 'us-east-2'
+    EKS_CLUSTER_NAME = 'udacity-cloud-devops-capstone'
+    DOCKER_IMAGE_NAME = 'udacity-cloud-devops-capstone'
+  }
+
   stages {
     stage('System Check') {
         steps {
