@@ -3,12 +3,12 @@ pipeline {
   
   environment {
     AWS_REGION = 'eu-central-1'
-    EKS_CLUSTER_NAME = 'udacity-cloud-devops-capstone'
-    DOCKER_IMAGE_NAME = 'udacity-cloud-devops-capstone'
+    EKS_CLUSTER_NAME = 'nnnnn'
+    DOCKER_IMAGE_NAME = 'nnn'
   }
 
   stages {
-    stage('System Check') {
+    stage('Check system') {
         steps {
             sh 'pwd'
             sh 'ls -la'
@@ -21,8 +21,7 @@ pipeline {
     stage('Install dependencies') {
       steps {
         sh 'make setup'
-        sh 'make install'
-        sh 'pip3 list'             
+        sh 'make install'             
       }
     }
      
