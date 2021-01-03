@@ -1,4 +1,4 @@
 pytest
 pylint
 flask
-pylint-flask
+pylint_flask
