@@ -16,6 +16,7 @@ pipeline {
           sh 'python3 --version'
           sh 'pip3 --version'
           sh 'which python3'
+          sh 'whoami'
       }
     }
 
@@ -45,14 +46,14 @@ pipeline {
     stage('Build docker image') {
       steps {
         dir('app') {
-          sh 'sudo docker build --tag=${DOCKER_IMAGE_NAME} .'
+          sh 'docker build --tag=${DOCKER_IMAGE_NAME} .'
         }
       }
     }
 
     stage('Test docker container') {
         steps {
-            sh 'sudo docker image ls'
+            sh 'docker image ls'
             sh 'docker container ls'
             sh 'docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
             sh 'sleep 2s'
