@@ -3,7 +3,7 @@ setup:
 	. capstone-env/bin/activate
 
 install:
-	#pip install --upgrade pip &&
+	pip3 install
 	pip3 install -r requirements.txt
 
 test:
