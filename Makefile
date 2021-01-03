@@ -1,6 +1,6 @@
 setup:
-	python -m venv capstone-env
-	. capstone-env/bin/activate
+	python -m venv devops-capstone
+	. devops-capstone/bin/activate
 
 install:
 	pip3 install --upgrade pip
