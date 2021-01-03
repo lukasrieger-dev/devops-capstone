@@ -11,6 +11,7 @@ tests:
 
 lint:
 	hadolint Dockerfile
-	pylint --load-plugins pylint_flask --disable=R,C api/**.py
+	pylint --disable=R,C api/**.py
+	# --load-plugins pylint_flask
 
 all: install lint test
