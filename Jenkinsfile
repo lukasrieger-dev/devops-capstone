@@ -20,7 +20,7 @@ pipeline {
 
     stage('Install dependencies, test, lint') {
       steps {
-        dir("app"){
+        dir('app'){
             sh """
             python3 -m venv capstone
             . capstone/bin/activate
@@ -30,6 +30,14 @@ pipeline {
             """
         }
       }
+    }
+  }
+
+  stage('verify aws-cli v2, eksctl, kubectl') {
+    steps {
+      sh 'aws --version'
+      sh 'eksctl version'
+      sh 'kubectl version --short --client'
     }
   }
 
