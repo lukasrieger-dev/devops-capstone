@@ -37,9 +37,15 @@ pipeline {
       steps {
         sh 'make test'         
       }
-    }      
+    }
+
+    stage('Run lint') {
+      steps {
+        sh 'make lint'         
+      }
+    }  
   }
-  
+
   post { 
       always { 
           echo 'Done.'

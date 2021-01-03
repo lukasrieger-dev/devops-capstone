@@ -7,8 +7,7 @@ install:
 		pip3 install -r requirements.txt
 
 test:
-	python3 -m pytest -vv --cov=api test/*.py
-	#test/test_api_endpoints.py
+	python3 -m pytest -vv test/test_*.py
 
 lint:
 	hadolint Dockerfile
