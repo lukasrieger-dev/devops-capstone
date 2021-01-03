@@ -25,6 +25,7 @@ pipeline {
             python3 -m venv devops
             . devops/bin/activate
             make install
+            make test
             make lint
             """
         }
