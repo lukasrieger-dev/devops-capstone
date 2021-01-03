@@ -1,3 +1,4 @@
+Flask==1.1.2
 pytest
 pylint
-Flask==1.1.2
+pylint-flask
