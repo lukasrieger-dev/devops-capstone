@@ -76,70 +76,70 @@ pipeline {
         }
     }
 
-  stage('Deploy to EKS') {
-    steps {
-      withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
-        script {
-          // check if the AWS EKS cluster ARN exists
-          def EKS_ARN = sh(
-              script: "aws cloudformation list-exports --query \"Exports[?Name=='eksctl-${EKS_CLUSTER_NAME}-cluster::ARN'].Value\" --output text",
-              returnStdout: true
-          ).trim()
-          // create the AWS EKS cluster using eksctl if the ARN doesn't exist
-          if (EKS_ARN.isEmpty()) {
-              sh """
-              eksctl create cluster --name ${EKS_CLUSTER_NAME} \
-                                    --version 1.17 \
-                                    --nodegroup-name standard-workers \
-                                    --node-type t2.medium \
-                                    --nodes 2 \
-                                    --nodes-min 1 \
-                                    --nodes-max 2 \
-                                    --node-ami auto \
-                                    --region ${AWS_REGION}
-              """
-              sh 'sleep 2m'  // wait for creation
-              // update the value of EKS_ARN after the cluster is created
-              EKS_ARN = sh(
-                  script: "aws cloudformation list-exports --query \"Exports[?Name=='eksctl-${EKS_CLUSTER_NAME}-cluster::ARN'].Value\" --output text",
-                  returnStdout: true
-              ).trim()
-          }
-          sh 'aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}'
-          sh "kubectl config use-context ${EKS_ARN}"
-        }
-        sh 'kubectl config current-context'
-        sh 'kubectl apply -f deployment.yml'
-        sh 'kubectl rollout restart deployments/mathsapi'
-        sh 'sleep 2m'  // wait for image pulling
-        sh 'kubectl get nodes'
-      }
-    }
-  }
-
-  stage('Smoke test') {
-    steps {
-      withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
-        script {
-            def EKS_HOSTNAME = sh(
-                script: 'kubectl get svc mathsapi -o jsonpath="{.status.loadBalancer.ingress[*].hostname}"',
+    stage('Deploy to EKS') {
+      steps {
+        withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
+          script {
+            // check if the AWS EKS cluster ARN exists
+            def EKS_ARN = sh(
+                script: "aws cloudformation list-exports --query \"Exports[?Name=='eksctl-${EKS_CLUSTER_NAME}-cluster::ARN'].Value\" --output text",
                 returnStdout: true
+            ).trim()
+            // create the AWS EKS cluster using eksctl if the ARN doesn't exist
+            if (EKS_ARN.isEmpty()) {
+                sh """
+                eksctl create cluster --name ${EKS_CLUSTER_NAME} \
+                                      --version 1.17 \
+                                      --nodegroup-name standard-workers \
+                                      --node-type t2.medium \
+                                      --nodes 2 \
+                                      --nodes-min 1 \
+                                      --nodes-max 2 \
+                                      --node-ami auto \
+                                      --region ${AWS_REGION}
+                """
+                sh 'sleep 2m'  // wait for creation
+                // update the value of EKS_ARN after the cluster is created
+                EKS_ARN = sh(
+                    script: "aws cloudformation list-exports --query \"Exports[?Name=='eksctl-${EKS_CLUSTER_NAME}-cluster::ARN'].Value\" --output text",
+                    returnStdout: true
                 ).trim()
-            sh "curl ${EKS_HOSTNAME}:8080"
+            }
+            sh 'aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}'
+            sh "kubectl config use-context ${EKS_ARN}"
+          }
+          sh 'kubectl config current-context'
+          sh 'kubectl apply -f deployment.yml'
+          sh 'kubectl rollout restart deployments/mathsapi'
+          sh 'sleep 2m'  // wait for image pulling
+          sh 'kubectl get nodes'
+        }
+      }
+    }
+
+    stage('Smoke test') {
+      steps {
+        withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
+          script {
+              def EKS_HOSTNAME = sh(
+                  script: 'kubectl get svc mathsapi -o jsonpath="{.status.loadBalancer.ingress[*].hostname}"',
+                  returnStdout: true
+                  ).trim()
+              sh "curl ${EKS_HOSTNAME}:8080"
+          }
+        }
+      }
+    }
+
+    stage('Check rollout') {
+      steps {
+        withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
+            sh 'kubectl rollout status deployments/mathsapi'
         }
       }
     }
   }
-
-  stage('Check rollout') {
-    steps {
-      withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
-          sh 'kubectl rollout status deployments/mathsapi'
-      }
-    }
-  }
-
-
+  
   post { 
     always { 
         echo 'Done.'
