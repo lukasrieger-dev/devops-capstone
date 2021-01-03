@@ -1,6 +1,6 @@
 setup:
-	python3 -m venv .capstone-env
-	. .capstone-env/bin/activate
+	python3 -m venv capstone-env
+	. capstone-env/bin/activate
 
 install:
 	pip3 install --upgrade pip &&\
@@ -11,6 +11,6 @@ test:
 
 lint:
 	hadolint Dockerfile
-	pylint --load-plugins pylint_flask --disable=R,C app.py
+	pylint --load-plugins pylint_flask --disable=R,C ./api/**.py
 
 all: install lint test
