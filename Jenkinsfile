@@ -55,9 +55,10 @@ pipeline {
         steps {
             sh 'docker image ls'
             sh 'docker container ls'
-            sh 'docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
+            sh 'docker run -d -p 8080:80 ${DOCKER_IMAGE_NAME}'
+            // wait 2 seconds for the container to be ready, before we call it
             sh 'sleep 2s'
-            sh 'curl http://localhost:8000'
+            sh 'curl http://localhost:8080'
             sh 'docker stop $(docker ps -a -q)'
             sh 'docker rm -f $(docker ps -a -q)'
             sh 'docker container ls'
@@ -78,6 +79,8 @@ pipeline {
 
     stage('Deploy to EKS') {
       steps {
+        // In order to be able to connect to AWS use the Jenkins Plugins:
+        // https://support.cloudbees.com/hc/en-us/articles/360027893492-How-To-Authenticate-to-AWS-with-the-Pipeline-AWS-Plugin
         withAWS(credentials: 'aws-credentials', region: "${AWS_REGION}") {
           script {
             // check if the AWS EKS cluster ARN exists
@@ -87,18 +90,13 @@ pipeline {
             ).trim()
             // create the AWS EKS cluster using eksctl if the ARN doesn't exist
             if (EKS_ARN.isEmpty()) {
+                // https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html
                 sh """
-                eksctl create cluster --name ${EKS_CLUSTER_NAME} \
-                                      --version 1.17 \
-                                      --nodegroup-name standard-workers \
-                                      --node-type t2.medium \
-                                      --nodes 2 \
-                                      --nodes-min 1 \
-                                      --nodes-max 2 \
-                                      --node-ami auto \
-                                      --region ${AWS_REGION}
+                eksctl create cluster --name ${EKS_CLUSTER_NAME} --version 1.18 --nodegroup-name standard-workers --node-type t2.medium \
+                                      --nodes 2 --nodes-min 1 --nodes-max 2 --node-ami auto --region ${AWS_REGION}
                 """
-                sh 'sleep 2m'  // wait for creation
+                // wait 1 minutes because cluster creation takes some time
+                sh 'sleep 1m'
                 // update the value of EKS_ARN after the cluster is created
                 EKS_ARN = sh(
                     script: "aws cloudformation list-exports --query \"Exports[?Name=='eksctl-${EKS_CLUSTER_NAME}-cluster::ARN'].Value\" --output text",
@@ -111,7 +109,7 @@ pipeline {
           sh 'kubectl config current-context'
           sh 'kubectl apply -f deployment.yml'
           sh 'kubectl rollout restart deployments/mathsapi'
-          sh 'sleep 2m'  // wait for image pulling
+          sh 'sleep 2m'
           sh 'kubectl get nodes'
         }
       }
@@ -125,7 +123,7 @@ pipeline {
                   script: 'kubectl get svc mathsapi -o jsonpath="{.status.loadBalancer.ingress[*].hostname}"',
                   returnStdout: true
                   ).trim()
-              sh "curl ${EKS_HOSTNAME}:8080"
+              sh 'curl ${EKS_HOSTNAME}:8080'
           }
         }
       }
@@ -142,7 +140,7 @@ pipeline {
 
   post { 
     always { 
-        echo 'Done.'
+        echo 'Done. Pipeline finished successfully.'
     }
   }  
 }

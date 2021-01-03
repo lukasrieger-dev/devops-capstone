@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: mathsapi
-          image: lukasrieger/udacity-capstone-math-api
+          image: lukasriegerdev/udacity-capstone-math-api
           imagePullPolicy: "Always"
           ports:
             - containerPort: 80
