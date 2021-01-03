@@ -20,7 +20,7 @@ pipeline {
         }
     }
 
-    stage('Cloning Git Repo') {
+    stage('Clone Git Repo') {
       steps {
         git 'https://github.com/lukasrieger-dev/devops-capstone.git'
       }
@@ -28,20 +28,26 @@ pipeline {
 
     stage('Install dependencies') {
       steps {
-        sh 'make setup'
-        sh 'make install'                     
+        dir('api') {
+          sh 'make setup'
+          sh 'make install'
+        }                    
       }
     }
      
     stage('Run tests') {
       steps {
-        sh 'make test'         
+        dir('api') {
+          sh 'make test'
+        }         
       }
     }
 
     stage('Run lint') {
       steps {
-        sh 'make lint'         
+        dir('api') {
+          sh 'make lint'
+        }                
       }
     }  
   }
