@@ -18,19 +18,35 @@ pipeline {
       }
     }
 
-    stage('lint') {
+    stage('Install dependencies') {
       steps {
         dir("app"){
             sh """
             python3 -m venv capstone
             . capstone/bin/activate
             make install
-            make tests
-            make lint
             """
         }
       }
-    } 
+    }
+
+    stage('Run tests') {
+      steps {
+        dir('app'){
+          sh 'make tests'
+        }
+      }
+    }
+
+    stage('Lint') {
+      steps {
+        dir('app') {
+          sh 'make lint'
+        }
+      }
+    }
+
+
   }
 
   post { 
