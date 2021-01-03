@@ -1,13 +1,13 @@
 setup:
-	python3 -m venv capstone-env
+	python -m venv capstone-env
 	. capstone-env/bin/activate
 
 install:
-	pip3 install --upgrade pip3 &&\
-		pip3 install -r requirements.txt
+	pip install --upgrade pip &&\
+		pip install -r requirements.txt
 
 test:
-	python3 -m pytest -vv test/test_*.py
+	python -m pytest -vv test/test_*.py
 
 lint:
 	hadolint Dockerfile
