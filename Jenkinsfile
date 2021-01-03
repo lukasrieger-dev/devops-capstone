@@ -28,26 +28,20 @@ pipeline {
 
     stage('Install dependencies') {
       steps {
-        dir('api') {
-          sh 'make setup'
-          sh 'make install'
-        }                    
+        sh 'make setup'
+        sh 'make install'                  
       }
     }
      
     stage('Run tests') {
       steps {
-        dir('api') {
-          sh 'make test'
-        }         
+        sh 'make test'      
       }
     }
 
     stage('Run lint') {
       steps {
-        dir('api') {
-          sh 'make lint'
-        }                
+        sh 'make lint'               
       }
     }  
   }
