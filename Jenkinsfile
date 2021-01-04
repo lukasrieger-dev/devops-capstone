@@ -107,13 +107,11 @@ pipeline {
             sh "kubectl config use-context ${EKS_ARN}"
           }
           sh 'kubectl config current-context'
-          sh 'echo ####OLD NODES###'
-          sh 'kubectl get nodes'
+          sh 'kubectl get pods'
           sh 'kubectl apply -f deployment.yml'
-          sh 'kubectl rollout restart deployments/mathsapi'
+          //sh 'kubectl rollout restart deployments/mathsapi'
           sh 'sleep 1m'
-          sh 'echo ###NEW NODES###'
-          sh 'kubectl get nodes'
+          sh 'kubectl get pods'
         }
       }
     }
