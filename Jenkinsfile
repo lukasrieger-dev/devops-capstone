@@ -93,7 +93,7 @@ pipeline {
                 // https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html
                 sh """
                 eksctl create cluster --name ${EKS_CLUSTER_NAME} --version 1.18 --nodegroup-name standard-workers --node-type t2.medium \
-                                      --nodes 2 --nodes-min 1 --nodes-max 2 --node-ami auto --region ${AWS_REGION}
+                                      --nodes 2 --nodes-min 2 --nodes-max 3 --node-ami auto --region ${AWS_REGION}
                 """
                 // wait 1 minutes because cluster creation takes some time
                 sh 'sleep 1m'
@@ -109,7 +109,7 @@ pipeline {
           sh 'kubectl config current-context'
           sh 'kubectl apply -f deployment.yml'
           sh 'kubectl rollout restart deployments/mathsapi'
-          sh 'sleep 2m'
+          sh 'sleep 1m'
           sh 'kubectl get nodes'
         }
       }
