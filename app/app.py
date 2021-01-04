@@ -8,7 +8,7 @@ def root():
 
 
 @app.route('/new')
-def root():
+def new():
     return "<h1>This is another endpoint.</h1>"
 
 
