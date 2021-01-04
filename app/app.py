@@ -7,6 +7,11 @@ def root():
     return "<h1>Lukas Rieger's Cloud DevOps Engineer Capstone Project!</h1>"
 
 
+@app.route('/new')
+def root():
+    return "<h1>This is another endpoint.</h1>"
+
+
 @app.route('/add', methods=['GET'])
 def add():
     try:
