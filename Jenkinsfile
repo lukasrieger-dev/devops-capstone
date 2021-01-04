@@ -109,7 +109,7 @@ pipeline {
           sh 'kubectl config current-context'
           sh 'kubectl get pods'
           sh 'kubectl apply -f deployment.yml'
-          //sh 'kubectl rollout restart deployments/mathsapi'
+          sh 'kubectl rollout restart deployments/mathsapi'
           sh 'sleep 1m'
           sh 'kubectl get pods'
         }
